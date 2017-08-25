@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>Test Page</title>
+
+
+  </head>
+  <body>
+    <div>Input text: <input type="text" id="planet_name" name="planet_name" onkeyup="process();"></div><br />
+    <div>
+      <p style="color:red;">Suggestions: </p>
+      <p id="suggestion_box">
+        See your suggestion here.
+      </p>
+
+    </div>
+
+    <script>
+          function process() {
+            var current_text = $('#planet_name').val();
+            $.ajax({
+              url:        "http://localhost:8080/planets_ajax/server.php",
+              type:       "GET",
+              data:       "planet_name="+current_text,
+              dataType:   "json",
+              success:    function(response, status, http) {
+                console.log(response);
+                var new_suggestion = '';
+                $.each(response, function(index, value){
+                  new_suggestion = new_suggestion + "Name: "+ value.name+"<br />";
+                  new_suggestion = new_suggestion + "order_no: "+ value.order_no+"<br />";
+                  new_suggestion = new_suggestion + "No of days: "+ value.no_of_days_in_year+"<br /><br /><br />";
+                });
+                $('#suggestion_box').html(new_suggestion);
+              },
+              error:      function(response, status, error) {
+                alert("An error occured "+status+" "+error);
+              }
+
+
+            });
+          }
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  </body>
+</html>
